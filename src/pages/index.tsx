@@ -1,25 +1,43 @@
 import * as React from "react";
 import { graphql } from "gatsby";
-import { Site, SiteSiteMetadata } from "../../graphql-types";
+import {
+  ContentfulImageConnection,
+} from "../../graphql-types";
 
 type Props = {
   data: {
-    site: Site;
+    allContentfulImage: ContentfulImageConnection;
   };
 };
 
 const Index: React.FC<Props> = (props) => {
   console.debug({ props });
-  return <div>{props.data.site.siteMetadata?.testString}</div>;
+
+  return (
+    <div>
+      {"hello"}
+      <img src={props.data.allContentfulImage.edges[0].node.photo?.file?.url || ''} alt={''} />
+    </div>
+  );
 };
 
 export default Index;
 
 export const query = graphql`
-  query {
-    site {
-      siteMetadata {
-        testString
+  {
+    allContentfulImage(filter: { photo: { title: { eq: "The Flower" } } }) {
+      edges {
+        node {
+          photo {
+            file {
+              url
+              fileName
+              contentType
+            }
+            description
+            title
+          }
+        }
       }
     }
   }
